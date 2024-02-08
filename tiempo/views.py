@@ -40,17 +40,31 @@ class ServicioViewSet(viewsets.ModelViewSet):
                 return Response("Servicios no encontrado", status=status.HTTP_404_NOT_FOUND)
         else:
             return Response("Se requiere el parámetro 'cuenta'", status=status.HTTP_400_BAD_REQUEST)
-
+        
+    def buscar_por_id(self, request, *args, **kwargs):
+        cuenta = request.query_params.get('idDeServicio')  # Obtener el parámetro de consulta 'cuenta'
+    
+        print("Correo proporcionado:", cuenta)
+        if cuenta:
+            try:
+                servicios = Servicio.objects.get(id=cuenta)
+                # servicios = Servicio.objects.filter(Q(propietario=cuenta))
+                print("Servicios encontrado:", servicios)
+                serializer = self.get_serializer(servicios)
+                return Response(serializer.data)
+            except Servicio.DoesNotExist:
+                print("Servicios no encontrado")
+                return Response("Servicios no encontrado", status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response("Se requiere el parámetro 'cuenta'", status=status.HTTP_400_BAD_REQUEST)
 
 class CuentaViewSet(viewsets.ModelViewSet):
     queryset = Cuenta.objects.all()
     serializer_class = CuentaSerializers
 
-    
     def buscarCuentaUsuario(self, request, *args, **kwargs):
-        cuenta = request.query_params.get('usuario')  # Obtener el parámetro de consulta 'usuario'
-        print("Usuario proporcionado:", cuenta)
-        
+        cuenta = request.query_params.get('usuario')  # Obtener el parámetro de consulta 'cuenta'
+        print("cuenta proporcionado:", cuenta)
         if cuenta:
             try:
                 cuenta_obj = Cuenta.objects.get(usuario=cuenta)
@@ -62,6 +76,23 @@ class CuentaViewSet(viewsets.ModelViewSet):
                 return Response("Cuenta no encontrada", status=status.HTTP_404_NOT_FOUND)
         else:
             return Response("Se requiere el parámetro 'usuario'", status=status.HTTP_400_BAD_REQUEST)
+        
+    def buscarCuentaIdCuenta(self, request, *args, **kwargs):
+        cuenta = request.query_params.get('idCuenta')  # Obtener el parámetro de consulta 'usuario'
+        print("Usuario proporcionado:", cuenta)
+        if cuenta:
+            try:
+                cuenta_obj = Cuenta.objects.get(id=cuenta)
+                print("Cuenta encontrado:", cuenta_obj)
+                serializer = self.get_serializer(cuenta_obj)
+                return Response(serializer.data)
+            except Cuenta.DoesNotExist:
+                print("Cuenta no encontrada")
+                return Response("Cuenta no encontrada", status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response("Se requiere el parámetro 'usuario'", status=status.HTTP_400_BAD_REQUEST)
+    
+    
 
 
 
@@ -105,7 +136,23 @@ class UsuarioViewSet(viewsets.ModelViewSet):
                 return Response("Usuario no encontrado", status=status.HTTP_404_NOT_FOUND)
         else:
             return Response("Se requiere el parámetro 'correo'", status=status.HTTP_400_BAD_REQUEST)
-
+    
+    def buscarPropietarioIdCuenta(self, request, *args, **kwargs):
+        cuenta = request.query_params.get('idCuenta')  # Obtener el parámetro de consulta 'usuario'
+        print("Usuario proporcionado:", cuenta)
+        if cuenta:
+            try:
+                cuenta_obj = Cuenta.objects.get(id=cuenta)
+                propietario_obj = Usuario.objects.get(id=cuenta_obj.usuario.id)
+                print("Propietario encontrado:", propietario_obj)
+                print(propietario_obj.first_name)
+                serializer = self.get_serializer(propietario_obj)
+                return Response(serializer.data)
+            except Cuenta.DoesNotExist:
+                print("Propietario no encontrada")
+                return Response("Propietario no encontrada", status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response("Se requiere el parámetro 'usuario'", status=status.HTTP_400_BAD_REQUEST)
 
 
 class RolViewSet(viewsets.ModelViewSet):
@@ -137,22 +184,23 @@ class CanalMensajeViewSet(viewsets.ModelViewSet):
     queryset = CanalMensaje.objects.all()
     serializer_class = CanalMensajeSerializers
 
-    @action(detail=False, methods=['get'])
+   #--------------------------------------BUSCA LOS MENSAJES POR CUENTA Y LOS PRESENTA EN FORMA DE LISTA-------------
+
     def buscar_por_id(self, request, *args, **kwargs):
-        id = request.query_params.get('id')
-        print("ID proporcionado:", id)
-        if id:
-            canal = CanalMensaje.objects.filter(id=id).first()
-            if canal:
-                print("Canal Encontrado:", id)
-                serializer = self.get_serializer(canal)
+        usuario_id = request.query_params.get('id')
+        
+        if usuario_id:
+            # Filtrar los mensajes por el ID del usuario proporcionado
+            mensajes = CanalMensaje.objects.filter(usuario=usuario_id)
+            
+            if mensajes.exists():
+                serializer = self.get_serializer(mensajes, many=True)
                 return Response(serializer.data)
             else:
-                print("Canal no encontrado")
-                return Response("Canal no encontrado", status=status.HTTP_404_NOT_FOUND)
+                return Response("No se encontraron mensajes para el usuario especificado", status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response("Se requiere el parámetro 'id'", status=status.HTTP_400_BAD_REQUEST)
-
+            return Response("Se requiere el parámetro 'usuario_id'", status=status.HTTP_400_BAD_REQUEST)
+        
 class CanalViewSet(viewsets.ModelViewSet):
     queryset = Canal.objects.all()
     serializer_class = CanalSerializers

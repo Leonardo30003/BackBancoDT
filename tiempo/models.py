@@ -95,15 +95,16 @@ class Servicio(models.Model):
 class TransaccionTiempo(models.Model):
     servicio =  models.ForeignKey(Servicio, on_delete= models.RESTRICT)
     numero_horas = models.IntegerField(verbose_name="Horas de Transferencia")
-    numero_minutos = models.IntegerField(verbose_name="Minutos")
+    numero_minutos = models.IntegerField(verbose_name="Minutos", blank=True, null=True)
     descripcion = models.CharField(verbose_name="Descripción", max_length=256)
+    propietario = models.ForeignKey("Cuenta", related_name="propietario_cuenta", blank=True, null=True, on_delete = models.RESTRICT)
     demandante = models.ManyToManyField(Usuario, related_name="transacciones_demandante") #la siguiente linea se debe eliminar
-    demandanteCuenta = models.ForeignKey("Cuenta", blank=True, on_delete = models.RESTRICT)
+    demandanteCuenta = models.ForeignKey("Cuenta",verbose_name="quien oferta del servicio", blank=True, on_delete = models.RESTRICT)
     fecha_transaccion = models.DateField(verbose_name="Fecha de Transacción")
     estadoTransaccion = models.CharField(verbose_name="EstadoTransaccion",max_length=20,choices=[('aprobada', 'Aprobada'),('en_proceso', 'En Proceso'),('rechazada', 'Rechazada'),('cancelada', 'Cancelada'),('completada', 'Completada'),('pendiente', 'Pendiente'),('error', 'Error'),('en_revision', 'En Revisión')], null= True, blank= True)
-    def _str_(self):
+    def str(self):
         return str(self.servicio)
-    
+	
 class Calificacion(models.Model):
     puntuacion = models.IntegerField(verbose_name="Puntuación")
     comentarios = models.CharField(verbose_name="Comentarios", max_length=50)
