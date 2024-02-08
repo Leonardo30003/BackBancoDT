@@ -13,7 +13,10 @@ urlpatterns = [
     path('api/cuentas',CuentaViewSet.as_view({'get':'list','post':'create'}), name="lista-cuentas"),
     path('api/cuenta/<int:pk>', CuentaViewSet.as_view({'get':'retrieve','put':'update'}), name="detalle-cuenta"),
     path('api/cuenta/buscarCuentaUsuario/', CuentaViewSet.as_view({'get': 'buscarCuentaUsuario'}), name='buscarCuentaUsuario'),
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0434fdd673b28c72ea62f572d18b307e34c4164f
     #path para CuentaId
     path('api/cuenta/buscarCuentaIdCuenta/', CuentaViewSet.as_view({'get': 'buscarCuentaIdCuenta'}), name='buscarCuentaIdCuenta'),
     #path para  Usuario

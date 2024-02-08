@@ -65,6 +65,10 @@ class CuentaViewSet(viewsets.ModelViewSet):
     def buscarCuentaUsuario(self, request, *args, **kwargs):
         cuenta = request.query_params.get('usuario')  # Obtener el parámetro de consulta 'cuenta'
         print("cuenta proporcionado:", cuenta)
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 0434fdd673b28c72ea62f572d18b307e34c4164f
         if cuenta:
             try:
                 cuenta_obj = Cuenta.objects.get(usuario=cuenta)
@@ -80,6 +84,10 @@ class CuentaViewSet(viewsets.ModelViewSet):
     def buscarCuentaIdCuenta(self, request, *args, **kwargs):
         cuenta = request.query_params.get('idCuenta')  # Obtener el parámetro de consulta 'usuario'
         print("Usuario proporcionado:", cuenta)
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 0434fdd673b28c72ea62f572d18b307e34c4164f
         if cuenta:
             try:
                 cuenta_obj = Cuenta.objects.get(id=cuenta)
@@ -91,8 +99,11 @@ class CuentaViewSet(viewsets.ModelViewSet):
                 return Response("Cuenta no encontrada", status=status.HTTP_404_NOT_FOUND)
         else:
             return Response("Se requiere el parámetro 'usuario'", status=status.HTTP_400_BAD_REQUEST)
+<<<<<<< HEAD
     
     
+=======
+>>>>>>> 0434fdd673b28c72ea62f572d18b307e34c4164f
 
 
 
@@ -183,9 +194,13 @@ class CanalUsuarioViewSet(viewsets.ModelViewSet):
 class CanalMensajeViewSet(viewsets.ModelViewSet):
     queryset = CanalMensaje.objects.all()
     serializer_class = CanalMensajeSerializers
+    #--------------------------------------BUSCA LOS MENSAJES POR CUENTA Y LOS PRESENTA EN FORMA DE LISTA-------------
 
+<<<<<<< HEAD
    #--------------------------------------BUSCA LOS MENSAJES POR CUENTA Y LOS PRESENTA EN FORMA DE LISTA-------------
 
+=======
+>>>>>>> 0434fdd673b28c72ea62f572d18b307e34c4164f
     def buscar_por_id(self, request, *args, **kwargs):
         usuario_id = request.query_params.get('id')
         
@@ -200,7 +215,11 @@ class CanalMensajeViewSet(viewsets.ModelViewSet):
                 return Response("No se encontraron mensajes para el usuario especificado", status=status.HTTP_404_NOT_FOUND)
         else:
             return Response("Se requiere el parámetro 'usuario_id'", status=status.HTTP_400_BAD_REQUEST)
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 0434fdd673b28c72ea62f572d18b307e34c4164f
 class CanalViewSet(viewsets.ModelViewSet):
     queryset = Canal.objects.all()
     serializer_class = CanalSerializers
