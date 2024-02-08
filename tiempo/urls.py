@@ -12,6 +12,8 @@ urlpatterns = [
     path('api/cuentas',CuentaViewSet.as_view({'get':'list','post':'create'}), name="lista-cuentas"),
     path('api/cuenta/<int:pk>', CuentaViewSet.as_view({'get':'retrieve','put':'update'}), name="detalle-cuenta"),
     path('api/cuenta/buscarCuentaUsuario/', CuentaViewSet.as_view({'get': 'buscarCuentaUsuario'}), name='buscarCuentaUsuario'),
+    #path para CuentaId
+    path('api/cuenta/buscarCuentaIdCuenta/', CuentaViewSet.as_view({'get': 'buscarCuentaIdCuenta'}), name='buscarCuentaIdCuenta'),
     #path para  Usuario
     path('api/usuarios', UsuarioViewSet.as_view({'get':'list','post':'create'}), name="lista-usuarios"),
     path('api/usuario/<int:pk>', UsuarioViewSet.as_view({'get':'retrieve','put':'update'}), name="detalle-usuario"),
@@ -33,7 +35,6 @@ urlpatterns = [
     path('api/transacciones',TransaccionViewSet.as_view({'get':'list','post':'create'}), name="lista-transacciones"),
     path('api/transaccion/<int:pk>', TransaccionViewSet.as_view({'get':'retrieve','put':'update'}), name="detalle-transaccion"), 
 
-
     # Paths para CanalUsuario
     path('api/canalusuarios', CanalUsuarioViewSet.as_view({'get': 'list', 'post': 'create'}), name="lista-canalusuarios"),
     path('api/canalusuario/<int:pk>', CanalUsuarioViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="detalle-canalusuario"),
@@ -48,6 +49,7 @@ urlpatterns = [
     path('api/canal/<int:pk>', CanalViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="detalle-canal"),
     #autentificacion
     path('api/login',TokenObtainPairView.as_view(),name="token_obtain_pair")
+    
 ]
 
 

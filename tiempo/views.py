@@ -48,12 +48,28 @@ class CuentaViewSet(viewsets.ModelViewSet):
 
     
     def buscarCuentaUsuario(self, request, *args, **kwargs):
-        cuenta = request.query_params.get('usuario')  # Obtener el parámetro de consulta 'usuario'
-        print("Usuario proporcionado:", cuenta)
+        cuenta = request.query_params.get('usuario')  # Obtener el parámetro de consulta 'cuenta'
+        print("cuenta proporcionado:", cuenta)
         
         if cuenta:
             try:
                 cuenta_obj = Cuenta.objects.get(usuario=cuenta)
+                print("Cuenta encontrado:", cuenta_obj)
+                serializer = self.get_serializer(cuenta_obj)
+                return Response(serializer.data)
+            except Cuenta.DoesNotExist:
+                print("Cuenta no encontrada")
+                return Response("Cuenta no encontrada", status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response("Se requiere el parámetro 'usuario'", status=status.HTTP_400_BAD_REQUEST)
+        
+    def buscarCuentaIdCuenta(self, request, *args, **kwargs):
+        cuenta = request.query_params.get('idCuenta')  # Obtener el parámetro de consulta 'usuario'
+        print("Usuario proporcionado:", cuenta)
+        
+        if cuenta:
+            try:
+                cuenta_obj = Cuenta.objects.get(id=cuenta)
                 print("Cuenta encontrado:", cuenta_obj)
                 serializer = self.get_serializer(cuenta_obj)
                 return Response(serializer.data)
@@ -136,22 +152,22 @@ class CanalUsuarioViewSet(viewsets.ModelViewSet):
 class CanalMensajeViewSet(viewsets.ModelViewSet):
     queryset = CanalMensaje.objects.all()
     serializer_class = CanalMensajeSerializers
+    #--------------------------------------BUSCA LOS MENSAJES POR CUENTA Y LOS PRESENTA EN FORMA DE LISTA-------------
 
-    @action(detail=False, methods=['get'])
     def buscar_por_id(self, request, *args, **kwargs):
-        id = request.query_params.get('id')
-        print("ID proporcionado:", id)
-        if id:
-            canal = CanalMensaje.objects.filter(id=id).first()
-            if canal:
-                print("Canal Encontrado:", id)
-                serializer = self.get_serializer(canal)
+        usuario_id = request.query_params.get('id')
+        
+        if usuario_id:
+            # Filtrar los mensajes por el ID del usuario proporcionado
+            mensajes = CanalMensaje.objects.filter(usuario=usuario_id)
+            
+            if mensajes.exists():
+                serializer = self.get_serializer(mensajes, many=True)
                 return Response(serializer.data)
             else:
-                print("Canal no encontrado")
-                return Response("Canal no encontrado", status=status.HTTP_404_NOT_FOUND)
+                return Response("No se encontraron mensajes para el usuario especificado", status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response("Se requiere el parámetro 'id'", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Se requiere el parámetro 'usuario_id'", status=status.HTTP_400_BAD_REQUEST)
 
 class CanalViewSet(viewsets.ModelViewSet):
     queryset = Canal.objects.all()

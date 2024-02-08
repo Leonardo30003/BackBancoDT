@@ -18,9 +18,9 @@ class ServicioSerializers(serializers.ModelSerializer):
     ##propietario= UsuarioSerializers()
     class Meta:
         model = Servicio
-        fields = ['ROL_CHOICES','titulo','descripcion_actividad','tiempo_requerido','fecha_creacion','fecha_vigente','propietario','estadoVigencia','estadoServicio']
-        # fields = '__all__'
-        #read_only_fields = ['id','titulo','descripcion_actividad','tiempo_requerido','estadoVigencia']
+        fields = ['id','ROL_CHOICES','titulo','descripcion_actividad','tiempo_requerido','fecha_creacion','fecha_vigente','propietario','estadoVigencia','estadoServicio']
+        # fields = '_all_'
+        read_only_fields = ['id']
         
 class RolSerializers(serializers.ModelSerializer):
     class Meta:
